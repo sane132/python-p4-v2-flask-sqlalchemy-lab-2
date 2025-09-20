@@ -41,8 +41,8 @@ class TestSerialization:
     def test_review_is_serializable(self):
         '''review is serializable'''
         with app.app_context():
-            c = Customer()
-            i = Item()
+            c = Customer(name="Test Customer")
+            i = Item(name="Test Item", price=10.0)
             db.session.add_all([c, i])
             db.session.commit()
 

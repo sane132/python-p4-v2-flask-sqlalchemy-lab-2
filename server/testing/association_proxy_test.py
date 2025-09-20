@@ -1,5 +1,16 @@
 from app import app, db
 from server.models import Customer, Item, Review
+import pytest
+
+@pytest.fixture(autouse=True)
+def setup_database():
+    """Ensure fresh tables exist for each test."""
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+        yield
+        db.session.remove()
+        db.drop_all()
 
 
 class TestAssociationProxy:
@@ -8,8 +19,9 @@ class TestAssociationProxy:
     def test_has_association_proxy(self):
         '''has association proxy to items'''
         with app.app_context():
-            c = Customer()
-            i = Item()
+            c = Customer(name="Test Customer")
+            i = Item(name="Test Item", price=10.0)
+
             db.session.add_all([c, i])
             db.session.commit()
 
